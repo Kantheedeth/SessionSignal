@@ -46,6 +46,7 @@ For the demonstration use examples **27** (score 68%, bought), **9** (1%, did no
 | [presentation.html](presentation.html) | The 17-slide deck. Open in a browser, arrow keys to advance. |
 | [SessionSignal.pptx](SessionSignal.pptx) | The same deck as editable PowerPoint, for import into Canva. |
 | [SessionSignal_slides.pdf](SessionSignal_slides.pdf) | Flattened slides, as a presenting backup. |
+| [SessionSignal_Presentation_Script.pdf](SessionSignal_Presentation_Script.pdf) | Word-for-word speaking script: every line to say, every stage direction, timed per speaker. |
 | [SessionSignal_Project_Summary.pdf](SessionSignal_Project_Summary.pdf) | Plain-language summary of the whole project. |
 | [PRESENTATION_GUIDE.md](PRESENTATION_GUIDE.md) | Run of show, speaker allocation, Thai notes, demo script, recording steps. |
 

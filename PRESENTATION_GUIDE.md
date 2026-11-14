@@ -48,18 +48,18 @@ On slide 16 each member says one line: name, ID, what they did. **Confirm this t
 | 5 | EDA — outcomes, month, visitor type | 0:45 | 3:40 | Bhuchi |
 | 6 | EDA — correlations, behaviour, traffic | 0:50 | 4:30 | Bhuchi |
 | 7 | Evaluation design | 0:45 | 5:15 | Nonthaphat |
-| 8 | Models | 0:45 | 6:00 | Nonthaphat |
-| 9 | PyCaret — 14 models | 0:50 | 6:50 | Kamin |
-| 10 | Held-out results and intervals | 1:05 | 7:55 | Kamin |
-| 11 | What the model relies on | 0:50 | 8:45 | Kamin |
-| 12 | Improvement — threshold | 0:55 | 9:40 | Poonnawit |
-| 13 | Solution — score to worklist | 0:45 | 10:25 | Poonnawit |
-| 14 | **Live demonstration** | 2:00 | 12:25 | Choltawat |
-| 15 | Next steps | 0:35 | 13:00 | Choltawat |
-| 16 | Team and contributions | 0:40 | 13:40 | All, one line each |
-| 17 | Takeaway | 0:20 | 14:00 | Sirawich |
+| 8 | Models | 0:40 | 5:55 | Nonthaphat |
+| 9 | PyCaret — 14 models | 0:50 | 6:45 | Kamin |
+| 10 | Held-out results and intervals | 1:05 | 7:50 | Kamin |
+| 11 | What the model relies on | 0:50 | 8:40 | Kamin |
+| 12 | Improvement — threshold | 0:55 | 9:35 | Poonnawit |
+| 13 | Solution — score to worklist | 0:45 | 10:20 | Poonnawit |
+| 14 | **Live demonstration** | 2:00 | 12:20 | Choltawat |
+| 15 | Next steps | 0:35 | 12:55 | Choltawat |
+| 16 | Team and contributions | 0:40 | 13:35 | All, one line each |
+| 17 | Takeaway | 0:25 | 14:00 | Sirawich |
 
-Rehearsal checkpoints: slide 3 ends **2:15**, slide 8 ends **6:00**, slide 11 ends **8:45**, demo ends **12:25**, finish **14:00**.
+Rehearsal checkpoints: slide 3 ends **2:15**, slide 8 ends **5:55**, slide 11 ends **8:40**, demo ends **12:20**, finish **14:00**.
 
 ## Demonstration script — slide 14 (2:00)
 
