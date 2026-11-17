@@ -91,6 +91,24 @@ python pycaret_comparison.py
 
 `six` is required explicitly: PyCaret 3.3.2 imports `scikitplot`, which needs it but does not declare it. On macOS the optional LightGBM import may also need `libomp`.
 
+## Is LightGBM better?
+
+PyCaret's sweep puts LightGBM first by AUC, and people reproducing this project have landed on it, so [lightgbm_check.py](lightgbm_check.py) runs it through the same protocol as `train.py`: same split, same folds, same average-precision metric, same untouched holdout.
+
+| Model | CV AP | Test AP | Test AUC |
+|---|---:|---:|---:|
+| LightGBM, defaults | 0.3549 | 0.3599 | 0.7804 |
+| LightGBM, class-balanced | 0.3641 | 0.3620 | 0.7760 |
+| LightGBM, tuned | 0.3738 | 0.3768 | 0.7925 |
+| **Ours, tuned forest** | **0.3907** | 0.3739 | 0.7875 |
+
+Selection uses cross-validated AP on training data only, where ours leads 0.391 to 0.374. On the holdout LightGBM is +0.0034 ahead, with a 95% bootstrap interval of −0.020 to +0.026 and a 62% win rate — inside the same tie as every other model here. LightGBM is deliberately not in `requirements.txt`; it needs an OpenMP runtime that is awkward on macOS and the demo must not depend on it.
+
+```bash
+.venv/bin/python -m pip install lightgbm
+.venv/bin/python lightgbm_check.py
+```
+
 ## Practical limit
 
 The UCI rows describe completed sessions. The demonstration is a retrospective classifier, not a validated real-time recommender. To intervene while a visitor is still active, collect timestamped partial-session features, retrain and test on a later time period, then run an A/B experiment for any proposed action. `PageValues` was excluded to limit a potential source of target leakage, but this alone does not validate real-time availability of every remaining feature.
