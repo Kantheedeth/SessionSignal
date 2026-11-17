@@ -420,7 +420,8 @@ with tab_results:
             hide_index=True, width="stretch", height=300)
         st.caption(
             f"PyCaret `compare_models()` over its full classifier list with `fix_imbalance=True`, "
-            f"four-fold CV on its own split. Best AUC {lb['AUC'].max():.4f} "
+            f"four-fold cross-validation on the same 2,441-row split we use. "
+            f"Best AUC {lb['AUC'].max():.4f} "
             f"({lb.loc[lb['AUC'].idxmax(), 'Model']}) against our scikit-learn "
             f"{test['roc_auc']:.3f} — the same conclusion from a different toolchain: no model "
             "pulls clearly ahead.")

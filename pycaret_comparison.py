@@ -3,9 +3,12 @@
 The course is built around PyCaret, so this runs the full `compare_models`
 sweep rather than a hand-picked shortlist, with PyCaret's own imbalance
 handling switched on. It uses the same cleaned data and the same excluded
-PageValues column as train.py, but PyCaret controls its own split and
-preprocessing, so read these numbers alongside — not merged into — the
-scikit-learn holdout results in artifacts/results.json.
+PageValues column as train.py, and the same seed, so it holds out the same
+2,441 rows. What differs is the recipe after the split: PyCaret keeps the
+categorical columns native rather than one-hot, leaves the numeric columns
+unscaled, balances with SMOTE instead of class weights, and ranks by AUC.
+Its compare_models table is cross-validation; artifacts/results.json reports a
+held-out score. Read the two alongside each other, not merged.
 
 Run in a separate environment:
     python -m pip install 'pycaret==3.3.2' six

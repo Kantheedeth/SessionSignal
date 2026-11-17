@@ -131,7 +131,9 @@ Each member, five seconds: "ผม/ดิฉัน [ชื่อ] รหัส [
 **LightGBM topped your PyCaret table — why aren't you using it? / My reproduction picked LightGBM.**
 Both are fair points, and we checked rather than argued. LightGBM does win PyCaret's sweep on AUC (0.7732). So we re-ran it through our own protocol — same split, same folds, same metric, same holdout — in `lightgbm_check.py`. On the rule we actually select by, cross-validated AP on training data, ours scores **0.391** and the best LightGBM **0.374**, so ours is still chosen. On the holdout LightGBM edges ahead by **0.0034**, but the 95% interval is **−0.020 to +0.026** and it wins only **62%** of resamples. It joins the tie; it does not break it.
 
-**Why 14 models in PyCaret but 5 in scikit-learn?** PyCaret's `compare_models` is a fast, broad sweep on its own split — good for confirming nothing was missed. The scikit-learn experiment is the controlled one: one split, every model scored once on the same untouched test set. They agree.
+**Why 14 models in PyCaret but 5 in scikit-learn?** PyCaret's `compare_models` is a fast, broad sweep — good for confirming we had not missed a family. The scikit-learn experiment is the controlled one: every model scored once on the same untouched test set, selected on average precision.
+
+**Are the two experiments even on the same data?** Yes — we checked, and both hold out the identical 2,441 rows, because both pass seed 42 to the same splitter. The numbers differ because of what happens after the split: PyCaret keeps categories native (16 columns) where we one-hot (73), leaves numerics unscaled, uses SMOTE instead of class weights, ranks by AUC instead of average precision, and its leaderboard reports cross-validation while ours reports a held-out score. Same rows, different recipe.
 
 **Why not accuracy?** The no-purchase baseline is 84.4% accurate and finds zero buyers. Purchases are 15.6% of rows, so we use average precision.
 

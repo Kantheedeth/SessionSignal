@@ -76,7 +76,7 @@ The original linked workshop uses the removed `pycaret.nlp` module. The current 
 
 It compares **all 14 classifiers PyCaret ships with**, not a shortlist. Best CV AUC is **0.7732** (LightGBM), then gradient boosting **0.7641** and random forest **0.7495**, with the dummy baseline at **0.5000**. Against our scikit-learn holdout ROC AUC of **0.787**, the two toolchains reach the same conclusion: no model pulls clearly ahead. The saved sweep is [artifacts/pycaret_leaderboard.csv](artifacts/pycaret_leaderboard.csv) and the tuned holdout result is [artifacts/pycaret_tuned_holdout.csv](artifacts/pycaret_tuned_holdout.csv).
 
-PyCaret uses its own split and preprocessing, so read these numbers alongside — not merged into — the main scikit-learn comparison. To show them during rehearsal no installation is needed:
+**PyCaret lands on exactly the same 2,441 holdout rows as `train.py`** — both pass seed 42 to the same underlying splitter, and we verified the two row sets are identical. What differs is everything after the split: PyCaret keeps the seven categorical columns as native pandas categories (16 columns) where we one-hot them (73), leaves the numeric columns unscaled, balances classes with SMOTE rather than class weights, ranks by AUC rather than average precision, and reports cross-validation rather than a held-out score. Read the two tables alongside each other, not merged. To show them during rehearsal no installation is needed:
 
 ```bash
 cat artifacts/pycaret_leaderboard.csv
