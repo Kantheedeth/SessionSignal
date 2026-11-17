@@ -134,6 +134,7 @@ metric, the same seed — 80 fits each, no exceptions.
 | Family | Untuned CV | Tuned CV | Gain | Budget |
 |---|---:|---:|---:|---:|
 | Logistic regression | 0.3258 | 0.3281 | +0.0023 | 80 fits |
+| LightGBM | 0.3641 | 0.3741 | +0.0100 | 80 fits |
 | Gradient boosting | 0.3616 | **0.3858** | +0.0241 | 80 fits |
 | Random forest | 0.3641 | **0.3900** | +0.0258 | 80 fits |
 
@@ -144,7 +145,7 @@ tuning, and the two leading models remain statistically indistinguishable, exact
 **Did your tuning actually help?** Hyperparameter tuning added +0.002 AP, which is noise. **Threshold tuning was the real improvement:** 0.5 to 0.446 lifted recall from 46.3% to 62.3% and F1 from 0.412 to 0.444, at no training cost.
 
 **LightGBM topped your PyCaret table — why aren't you using it? / My reproduction picked LightGBM.**
-Both are fair points, and we checked rather than argued. LightGBM does win PyCaret's sweep on AUC (0.7732). So we re-ran it through our own protocol — same split, same folds, same metric, same holdout — in `lightgbm_check.py`. On the rule we actually select by, cross-validated AP on training data, ours scores **0.391** and the best LightGBM **0.374**, so ours is still chosen. On the holdout LightGBM edges ahead by **0.0034**, but the 95% interval is **−0.020 to +0.026** and it wins only **62%** of resamples. It joins the tie; it does not break it.
+Both are fair points, and we checked rather than argued. LightGBM does top PyCaret's sweep on AUC (0.7732). So we gave it the **same tuning budget as every other family** in `fair_tuning_check.py` — 20 candidates, same folds, same metric, 80 fits — rather than PyCaret's defaults or settings we picked by hand. It reaches **0.374** cross-validated AP against our **0.390**, finishing third behind gradient boosting. On the holdout the forest leads the closest rival by +0.0052 with a 95% interval of **−0.011 to +0.022**. LightGBM joins the tie; it does not break it.
 
 **Why 14 models in PyCaret but 5 in scikit-learn?** PyCaret's `compare_models` is a fast, broad sweep — good for confirming we had not missed a family. The scikit-learn experiment is the controlled one: every model scored once on the same untouched test set, selected on average precision.
 

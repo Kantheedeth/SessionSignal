@@ -99,32 +99,27 @@ different unfairness — but to give every family the **same tuning budget**.
 [fair_tuning_check.py](fair_tuning_check.py) does exactly that: 20 randomly sampled configurations each,
 scored on the same four folds with the same metric and seed. **80 fits per family, no exceptions.**
 
-| Family | Untuned CV AP | Tuned CV AP | Gain | Budget |
-|---|---:|---:|---:|---:|
-| Logistic regression | 0.3258 | 0.3281 | +0.0023 | 80 fits |
-| Gradient boosting | 0.3616 | 0.3858 | +0.0241 | 80 fits |
-| **Random forest** | 0.3641 | **0.3900** | +0.0258 | 80 fits |
+LightGBM is included too, since PyCaret's sweep ranks it first and people reproducing this project have
+landed on it. It gets the same budget as everyone else — no hand-picked settings.
 
-The ranking is unchanged. Boosting closes to within 0.004, and on the holdout the gap is +0.0052 with a 95%
-bootstrap interval of −0.011 to +0.022 — still inside the tie. The selection is not produced by unequal
-tuning, and the two leading models remain statistically indistinguishable.
+| Family | Untuned CV AP | Tuned CV AP | Gain | Test AP | Budget |
+|---|---:|---:|---:|---:|---:|
+| Logistic regression | 0.3258 | 0.3281 | +0.0023 | 0.3348 | 80 fits |
+| LightGBM | 0.3641 | 0.3741 | +0.0100 | 0.3713 | 80 fits |
+| Gradient boosting | 0.3616 | 0.3858 | +0.0241 | 0.3709 | 80 fits |
+| **Random forest** | 0.3641 | **0.3900** | +0.0258 | **0.3768** | 80 fits |
 
-## Is LightGBM better?
+The ranking is unchanged and the forest is still selected. Boosting closes to within 0.004; LightGBM, given
+the same budget rather than PyCaret's defaults, finishes third. On the holdout the forest leads the closest
+rival by +0.0052 with a 95% bootstrap interval of −0.011 to +0.022 — still inside the tie. The selection is
+not produced by unequal tuning, and the leading models remain statistically indistinguishable.
 
-PyCaret's sweep puts LightGBM first by AUC, and people reproducing this project have landed on it, so [lightgbm_check.py](lightgbm_check.py) runs it through the same protocol as `train.py`: same split, same folds, same average-precision metric, same untouched holdout.
-
-| Model | CV AP | Test AP | Test AUC |
-|---|---:|---:|---:|
-| LightGBM, defaults | 0.3549 | 0.3599 | 0.7804 |
-| LightGBM, class-balanced | 0.3641 | 0.3620 | 0.7760 |
-| LightGBM, tuned | 0.3738 | 0.3768 | 0.7925 |
-| **Ours, tuned forest** | **0.3907** | 0.3739 | 0.7875 |
-
-Selection uses cross-validated AP on training data only, where ours leads 0.391 to 0.374. On the holdout LightGBM is +0.0034 ahead, with a 95% bootstrap interval of −0.020 to +0.026 and a 62% win rate — inside the same tie as every other model here. LightGBM is deliberately not in `requirements.txt`; it needs an OpenMP runtime that is awkward on macOS and the demo must not depend on it.
+LightGBM is deliberately absent from `requirements.txt`: it needs an OpenMP runtime that is awkward on macOS
+and the demo must not depend on it. The script skips it cleanly when it is not installed.
 
 ```bash
-.venv/bin/python -m pip install lightgbm
-.venv/bin/python lightgbm_check.py
+.venv/bin/python -m pip install lightgbm    # optional
+.venv/bin/python fair_tuning_check.py
 ```
 
 ## Practical limit

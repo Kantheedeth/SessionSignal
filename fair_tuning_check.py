@@ -10,10 +10,15 @@ candidate configurations, scored on the same four folds, with the same
 average-precision metric and the same seed. 80 fits each, no exceptions. The
 search spaces are wide enough that none of them is artificially constrained.
 
+LightGBM is included when it is installed, because PyCaret's sweep ranks it
+first and people reproducing this project have landed on it. It gets exactly
+the same budget as everyone else - no hand-picked settings.
+
 Everything else matches train.py - same cleaned data, same PageValues
 exclusion, same stratified split at seed 42, same untouched holdout.
 
-    .venv/bin/python fair_tuning_check.py
+    .venv/bin/python fair_tuning_check.py            # without LightGBM
+    .venv/bin/python -m pip install lightgbm         # optional
 """
 
 from pathlib import Path
@@ -30,6 +35,11 @@ from sklearn.model_selection import (RandomizedSearchCV, StratifiedKFold,
                                      cross_validate, train_test_split)
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import OneHotEncoder, StandardScaler
+
+try:                                   # optional: needs an OpenMP runtime
+    from lightgbm import LGBMClassifier
+except ImportError:
+    LGBMClassifier = None
 
 
 ROOT = Path(__file__).resolve().parent
@@ -83,6 +93,19 @@ families = {
     ),
 }
 
+if LGBMClassifier is not None:
+    families["LightGBM"] = (
+        LGBMClassifier(class_weight="balanced", random_state=SEED, n_jobs=1, verbose=-1),
+        {"model__learning_rate": loguniform(0.01, 0.3),
+         "model__num_leaves": randint(5, 64),
+         "model__n_estimators": randint(100, 400),
+         "model__min_child_samples": randint(5, 60),
+         "model__reg_lambda": loguniform(1e-3, 10)},
+    )
+else:
+    print("note: lightgbm not installed, skipping that family "
+          "(pip install lightgbm to include it)\n")
+
 print(f"Equal budget: {N_CANDIDATES} candidates x 4 folds = {N_CANDIDATES * 4} fits per family\n")
 print(f"{'family':<22} {'untuned CV':>11} {'tuned CV':>9} {'gain':>8} {'test AP':>9}")
 print("-" * 64)
@@ -108,7 +131,9 @@ print(f"  ranking unchanged from train.py: {winner == 'Random forest'}")
 for name in results:
     print(f"  {name:<22} {results[name]['params']}")
 
-# With every family given the same budget, is the holdout difference real?
+# With every family given the same budget, is the winner's lead real?
+# Compare it against whichever rival came closest, not a fixed opponent.
+runner_up = max((n for n in results if n != winner), key=lambda n: results[n]["tuned"])
 rng = np.random.default_rng(SEED)
 y_true = y_test.to_numpy()
 diffs = []
@@ -116,11 +141,11 @@ for _ in range(2000):
     idx = rng.integers(0, len(y_true), len(y_true))
     if y_true[idx].sum() == 0:
         continue
-    diffs.append(average_precision_score(y_true[idx], results["Random forest"]["proba"][idx])
-                 - average_precision_score(y_true[idx], results["Gradient boosting"]["proba"][idx]))
+    diffs.append(average_precision_score(y_true[idx], results[winner]["proba"][idx])
+                 - average_precision_score(y_true[idx], results[runner_up]["proba"][idx]))
 diffs = np.asarray(diffs)
 lo, hi = np.percentile(diffs, 2.5), np.percentile(diffs, 97.5)
-print(f"\nEqually tuned, holdout gap forest minus boosting:")
+print(f"\nEqually tuned, holdout gap {winner} minus {runner_up}:")
 print(f"  mean {diffs.mean():+.4f}   95% CI [{lo:+.4f}, {hi:+.4f}]   "
-      f"forest ahead in {100 * (diffs > 0).mean():.1f}% of resamples")
+      f"{winner} ahead in {100 * (diffs > 0).mean():.1f}% of resamples")
 print(f"  significant: {'YES' if (lo > 0 or hi < 0) else 'NO, still tied'}")
