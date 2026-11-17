@@ -110,6 +110,16 @@ def main() -> None:
 
     chosen = max(pipelines, key=lambda n: results[n]["cv_average_precision"])
 
+    # Forests sum over trees in parallel, and the accumulation order varies run to
+    # run, which perturbs probabilities in the last bit. That is harmless for a
+    # score but it reorders the saved ranking and jitters derived thresholds, so
+    # fix the thread count to 1 for every downstream prediction. Training keeps
+    # its parallelism; only inference is pinned.
+    for pipe in pipelines.values():
+        model = pipe.named_steps["model"]
+        if hasattr(model, "n_jobs"):
+            model.n_jobs = 1
+
     # How precise are these scores? Bootstrap the test set so model differences
     # can be read against their uncertainty instead of at face value.
     probabilities = {n: p.predict_proba(X_test)[:, 1] for n, p in pipelines.items()}
@@ -149,7 +159,8 @@ def main() -> None:
     scored = X_test.copy()
     scored["Revenue"] = y_test.values.astype(bool)
     scored["score"] = probabilities[chosen]
-    scored.sort_values("score", ascending=False).to_csv(OUT / "scored_sessions.csv", index=False)
+    scored.sort_values("score", ascending=False, kind="mergesort").to_csv(
+        OUT / "scored_sessions.csv", index=False)
     report = {
         "source_rows": int(len(raw)), "exact_duplicates_removed": duplicates,
         "rows_used": int(len(df)), "positive_rate": float(y.mean()),
