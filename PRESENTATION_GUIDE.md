@@ -126,6 +126,20 @@ Each member, five seconds: "ผม/ดิฉัน [ชื่อ] รหัส [
 
 **Why is `Month` the most important feature?** Seasonality is genuinely predictive here — November converts at 25.4%, February at 1.6%. But it means the model has partly learned one store in one year, which is why later-period validation is our first next step. We found this by checking, not by assuming.
 
+**Only the forest was tuned — isn't that an unfair comparison?** It is a fair criticism, so we removed the
+asymmetry and checked: `fair_tuning_check.py` grid-searches every family under the same protocol, and
+deliberately gives gradient boosting the **largest grid** (18 combinations against the forest's 6).
+
+| Family | Untuned CV | Tuned CV | Gain |
+|---|---:|---:|---:|
+| Logistic regression | 0.3258 | 0.3281 | +0.0023 |
+| Gradient boosting | 0.3725 | **0.3829** | **+0.0105** |
+| Random forest | 0.3860 | **0.3907** | +0.0047 |
+
+Boosting gained the most and still finished second. **The ranking does not change**, and the forest was
+already ahead *before* any tuning (0.386 vs 0.372). With both tuned, the holdout gap is +0.0069 with a 95%
+interval of −0.014 to +0.029 — still tied, but the selection is not an artefact of unequal tuning.
+
 **Did your tuning actually help?** Hyperparameter tuning added +0.002 AP, which is noise. **Threshold tuning was the real improvement:** 0.5 to 0.446 lifted recall from 46.3% to 62.3% and F1 from 0.412 to 0.444, at no training cost.
 
 **LightGBM topped your PyCaret table — why aren't you using it? / My reproduction picked LightGBM.**

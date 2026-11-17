@@ -91,6 +91,22 @@ python pycaret_comparison.py
 
 `six` is required explicitly: PyCaret 3.3.2 imports `scikitplot`, which needs it but does not declare it. On macOS the optional LightGBM import may also need `libomp`.
 
+## Was it unfair to tune only the forest?
+
+`train.py` tunes the strongest family and leaves the rest at their initial settings, which is a reasonable
+thing to question. [fair_tuning_check.py](fair_tuning_check.py) removes the asymmetry: every family gets a
+grid search under the same protocol, with gradient boosting given the largest grid on purpose.
+
+| Family | Untuned CV AP | Tuned CV AP | Gain | Grid size |
+|---|---:|---:|---:|---:|
+| Logistic regression | 0.3258 | 0.3281 | +0.0023 | 5 |
+| Gradient boosting | 0.3725 | 0.3829 | **+0.0105** | 18 |
+| **Random forest** | 0.3860 | **0.3907** | +0.0047 | 6 |
+
+Gradient boosting gained the most from tuning and still came second. The forest also led *before* anyone was
+tuned (0.386 vs 0.372), so the selection is not an artefact of the asymmetry. With both tuned, the holdout
+gap is +0.0069 with a 95% bootstrap interval of −0.014 to +0.029: still inside the tie.
+
 ## Is LightGBM better?
 
 PyCaret's sweep puts LightGBM first by AUC, and people reproducing this project have landed on it, so [lightgbm_check.py](lightgbm_check.py) runs it through the same protocol as `train.py`: same split, same folds, same average-precision metric, same untouched holdout.
