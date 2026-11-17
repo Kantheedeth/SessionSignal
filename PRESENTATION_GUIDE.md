@@ -67,17 +67,17 @@ Open the app first: `.venv/bin/streamlit run app.py`. Two tabs, two minutes.
 
 ### Part 1 — Score a session (1:15)
 
-Pick each from the **Choose a held-out example session** dropdown. The score updates live; there is no button to press. Read the visitor's behaviour off the controls **before** pointing at the score.
+Pick each from the **Choose a held-out shopper case** dropdown. The score updates live; there is no button to press. Read the visitor's behaviour off the controls **before** pointing at the score.
 
-| Example | App shows | Actual | What you say |
+| Shopper case | App shows | Actual | What you say |
 |---|---:|---|---|
-| **27** | **68%** | bought | "12 product pages, nearly 13 minutes, never bounced. 68% — and this shopper did buy. The app says: *caught a buyer*." |
-| **9** | **1%** | did not buy | "One page, zero seconds, bounced straight out. One percent. The ranking works at both ends." |
-| **8** | **64%** | **did not buy** | "38 product pages. 64 minutes. Zero bounce. The model says 64% — and this person bought nothing." |
+| **The focused newcomer** (formerly #27) | **68%** | bought | "12 product pages, nearly 13 minutes, never bounced. 68% — and this shopper did buy. The app says: *caught a buyer*." |
+| **The one-page bounce** (formerly #9) | **1%** | did not buy | "One page, zero seconds, bounced straight out. One percent. The ranking works at both ends." |
+| **The hour-long explorer** (formerly #8) | **64%** | **did not buy** | "38 product pages. 64 minutes. Zero bounce. The model says 64% — and this person bought nothing." |
 
 **Pause after "bought nothing."** Then: *"That is not a model failure. Somebody shopped for an hour and left empty-handed. **This is the session our analyst opens first.**"*
 
-Optional if time allows: drag **Product pages viewed** down to ~2 on example 8. The score falls to ~46% and the verdict flips live to *correctly set aside*. Say the session is now hypothetical, then press **↺ Reset edits**.
+Optional if time allows: drag **Product pages viewed** down to ~2 on **The hour-long explorer**. The score falls to ~46% and the verdict flips live to *correctly set aside*. Say the session is now hypothetical, then press **↺ Reset edits**.
 
 ### Part 2 — Find lost sales (0:45)
 
@@ -170,7 +170,7 @@ Both are fair points, and we checked rather than argued. LightGBM does top PyCar
 - [ ] `SessionSignal_slides.pdf` saved as a fallback.
 
 **If recording a video:**
-- [ ] Slides in one tab, app in another; pre-select example 27.
+- [ ] Slides in one tab, app in another; pre-select **The focused newcomer**.
 - [ ] Record 1920x1080, microphone plus system audio (OBS or QuickTime).
 - [ ] **Do not speed up the footage** — the rubric requires 1x speed.
 - [ ] Upload **Unlisted or Public**, never Private. Names and IDs in the description.

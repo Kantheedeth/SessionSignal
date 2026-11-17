@@ -75,6 +75,40 @@ def load_scored():
 
 model = load_model()
 examples, report = load_data()
+# These names follow the fixed order of the 30 held-out rows in demo_sessions.csv.
+# They describe browsing behaviour without revealing the recorded purchase outcome.
+CASE_NAMES = [
+    "The brief December browse",
+    "The March admin-page check",
+    "The November product tour",
+    "The quick November exit",
+    "The May product search",
+    "The May admin-and-product visit",
+    "The October weekend scanner",
+    "The hour-long explorer",
+    "The one-page bounce",
+    "The May weekend browser",
+    "The December weekend browse",
+    "The July newcomer",
+    "The March deep-diving newcomer",
+    "The May weekend return",
+    "The low-exit September browser",
+    "The short November browse",
+    "The May half-hour explorer",
+    "The seven-product deep dive",
+    "The brief May return",
+    "The May information seeker",
+    "The November no-bounce browser",
+    "The December quick exit",
+    "The March information seeker",
+    "The 204-product marathon",
+    "The October product browse",
+    "The March 99-minute explorer",
+    "The focused newcomer",
+    "The May weekend explorer",
+    "The March high-exit browse",
+    "The May eight-product visit",
+]
 res = report["results"]
 chosen = report["chosen_model"]
 test = res[chosen]["test"]
@@ -99,9 +133,9 @@ with tab_predict:
     choose, clear = st.columns([4, 1], gap="medium")
     with choose:
         idx = st.selectbox(
-            "Choose a held-out example session",
+            "Choose a held-out shopper case",
             range(len(examples)), index=26,
-            format_func=lambda i: f"Example {i + 1}",
+            format_func=lambda i: CASE_NAMES[i],
         )
     with clear:
         st.markdown('<div style="height:1.85rem"></div>', unsafe_allow_html=True)
@@ -117,7 +151,7 @@ with tab_predict:
     left, right = st.columns([1.15, 1], gap="large")
 
     with left:
-        st.markdown(f"**What visitor #{idx + 1} did**")
+        st.markdown(f"**What this visitor did: {CASE_NAMES[idx]}**")
         a, b = st.columns(2, gap="medium")
         with a:
             row["ProductRelated"] = st.slider(
@@ -202,7 +236,7 @@ with tab_predict:
 
         st.markdown(
             f'<div class="ss-note">Recorded outcome for the original session '
-            f'<b>#{idx + 1}</b>: <b>{"purchase" if actual else "no purchase"}</b>. '
+            f'<b>{CASE_NAMES[idx]}</b>: <b>{"purchase" if actual else "no purchase"}</b>. '
             "If you changed any control this is now a hypothetical visitor, and that "
             "recorded outcome no longer describes them.</div>",
             unsafe_allow_html=True,

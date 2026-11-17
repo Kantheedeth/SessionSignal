@@ -2,15 +2,18 @@
 
 DES423 group assignment — predictive modeling pitch.
 
-| Student ID | Name | Main contribution |
-|---|---|---|
-| 6622782298 | Sirawich Narakulsookpipat | Problem research and framing |
-| 6622780342 | Chaitawat Boonkitticharoen | Dataset audit and target definition |
-| 6622782215 | Bhuchi Kumprakob | Exploratory data analysis |
-| 6622780276 | Nonthaphat Chuathong | Evaluation design and model selection |
-| 6622770657 | Kamin Sirisuwapong | PyCaret comparison, results and interpretation |
-| 6622772455 | Poonnawit Wongprateepwilai | Improvement and business solution |
-| 6622790267 | Choltawat Jullakasevi | Streamlit app, demonstration and limitations |
+| Student ID | Name | Leads and presents | Supports |
+|---|---|---|---|
+| 6622782298 | Sirawich Narakulsookpipat | Problem | Dataset, EDA |
+| 6622780342 | Chaitawat Boonkitticharoen | Dataset | EDA, Pipeline |
+| 6622782215 | Bhuchi Kumprakob | EDA | Pipeline, Models |
+| 6622780557 | Kantheedeth | Pipeline | Models, Tuning |
+| 6622780276 | Nonthaphat Chuathong | Models | Tuning, Solution |
+| 6622770657 | Kamin Sirisuwapong | Tuning | Solution, App & demo |
+| 6622772455 | Poonnawit Wongprateepwilai | Solution | Problem, App & demo |
+| 6622790267 | Choltawat Jullakasevi | App & demo | Problem, Dataset |
+
+Slides and video are shared by the whole team.
 
 This project uses the supplied `online_shoppers_intention.csv` from the [UCI Online Shoppers Purchasing Intention Dataset](https://archive.ics.uci.edu/dataset/468/online+shoppers+purchasing+intention+dataset). It predicts whether a completed browsing session ended in a purchase (`Revenue`).
 
@@ -37,7 +40,7 @@ Open the local URL printed by Streamlit. The app has five tabs:
 
 The theme is pinned in `.streamlit/config.toml` so the app renders identically on any machine, which matters when recording.
 
-For the demonstration use examples **27** (score 68%, bought), **9** (1%, did not buy) and **8** (64%, did **not** buy — the session an analyst should investigate).
+For the demonstration, choose **The focused newcomer** (score 68%, bought), **The one-page bounce** (1%, did not buy), and **The hour-long explorer** (64%, did **not** buy — the session an analyst should investigate).
 
 ## Presentation files
 
