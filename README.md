@@ -94,18 +94,20 @@ python pycaret_comparison.py
 ## Was it unfair to tune only the forest?
 
 `train.py` tunes the strongest family and leaves the rest at their initial settings, which is a reasonable
-thing to question. [fair_tuning_check.py](fair_tuning_check.py) removes the asymmetry: every family gets a
-grid search under the same protocol, with gradient boosting given the largest grid on purpose.
+thing to question. The right fix is not merely to tune everything — a larger grid for one model is just a
+different unfairness — but to give every family the **same tuning budget**.
+[fair_tuning_check.py](fair_tuning_check.py) does exactly that: 20 randomly sampled configurations each,
+scored on the same four folds with the same metric and seed. **80 fits per family, no exceptions.**
 
-| Family | Untuned CV AP | Tuned CV AP | Gain | Grid size |
+| Family | Untuned CV AP | Tuned CV AP | Gain | Budget |
 |---|---:|---:|---:|---:|
-| Logistic regression | 0.3258 | 0.3281 | +0.0023 | 5 |
-| Gradient boosting | 0.3725 | 0.3829 | **+0.0105** | 18 |
-| **Random forest** | 0.3860 | **0.3907** | +0.0047 | 6 |
+| Logistic regression | 0.3258 | 0.3281 | +0.0023 | 80 fits |
+| Gradient boosting | 0.3616 | 0.3858 | +0.0241 | 80 fits |
+| **Random forest** | 0.3641 | **0.3900** | +0.0258 | 80 fits |
 
-Gradient boosting gained the most from tuning and still came second. The forest also led *before* anyone was
-tuned (0.386 vs 0.372), so the selection is not an artefact of the asymmetry. With both tuned, the holdout
-gap is +0.0069 with a 95% bootstrap interval of −0.014 to +0.029: still inside the tie.
+The ranking is unchanged. Boosting closes to within 0.004, and on the holdout the gap is +0.0052 with a 95%
+bootstrap interval of −0.011 to +0.022 — still inside the tie. The selection is not produced by unequal
+tuning, and the two leading models remain statistically indistinguishable.
 
 ## Is LightGBM better?
 
